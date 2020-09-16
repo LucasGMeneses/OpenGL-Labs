@@ -4,7 +4,10 @@
  */
 #include <GL/freeglut.h>  
 #include <math.h>
-#include <stdio.h>
+
+float red[] = {1,0,0};
+float green[] = {0,1,0};
+float blue[] = {0,0,1};
 
 // seleciona a cor
 void set_color(float color[]){
@@ -14,6 +17,11 @@ void set_color(float color[]){
 //triangulo
 void triangle(float x0, float y0, float x1, float y1, float x2, float y2, float color[]){
    set_color(color);
+   glBegin(GL_TRIANGLES);
+      glVertex2f(x0,y0);
+      glVertex2f(x1,y1);
+      glVertex2f(x2,y2);
+  glEnd();
 }
 
 //quadrado                    //largura  altura
@@ -44,8 +52,7 @@ void circle(float raio, float cx, float cy, float color[] ){
 }
 //eixos
 void axis(){
-   float red[] = {1,0,0};
-   float green[] = {0,1,0};
+   
    
    //eixo y
    set_color(green); 
@@ -61,16 +68,19 @@ void axis(){
       glVertex2f(1,0);
    glEnd();
 }
+
 void init() {
    
     glClearColor(0, 0, 0, 1); // fundo preto
 }
 
 void display() {
-   float red [] = {1,0,0};
+
    glClear(GL_COLOR_BUFFER_BIT);  //limpa a tela
-   square(-0.5f, 0.5f, 0.3f, 0.3f, red);
-   axis();
+      square(-0.5f, 0.5f, 0.3f, 0.3f, red);
+      triangle(0.1f, -0.3f, 0.5f, -0.3f, 0.3f, -0.1f, blue);
+      circle(0.2f, -0.5f, -0.6f, green);
+      axis();
    glFlush(); //renderiza a proxima cena
 }
 
@@ -85,7 +95,7 @@ int main(int argc, char** argv) {
    //config da janela
    glutInitWindowSize(480, 480);   
    glutInitWindowPosition(50, 50); 
-   glutCreateWindow("Window"); 
+   glutCreateWindow("Zoom object"); 
    
    glutDisplayFunc(display);       
    glutIdleFunc(display);
