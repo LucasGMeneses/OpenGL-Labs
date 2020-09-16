@@ -1,5 +1,5 @@
 all:
-	g++ *.cpp -o app -lglut -lGL -lGLU -lm
+	g++ zoom.cpp -o app -lglut -lGLU -lGL
 
 run:
 	./app
