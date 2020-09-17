@@ -4,10 +4,12 @@
  */
 #include <GL/freeglut.h>  
 #include <math.h>
+#include <stdio.h>
 
-float red[] = {1,0,0};
-float green[] = {0,1,0};
-float blue[] = {0,0,1};
+GLfloat win = 1;         // variavel que usaremos pra escalonar a area de trabalho
+float red[] = {1,0,0};   // vermelho
+float green[] = {0,1,0}; // verde
+float blue[] = {0,0,1};  // blue
 
 // seleciona a cor
 void set_color(float color[]){
@@ -24,7 +26,7 @@ void triangle(float x0, float y0, float x1, float y1, float x2, float y2, float 
   glEnd();
 }
 
-//quadrado                    //largura  altura
+//retangulo                   //largura  altura
 void square(float x, float y, float w, float h, float color[]){
    set_color(color);
    glBegin(GL_QUADS);
@@ -57,15 +59,15 @@ void axis(){
    //eixo y
    set_color(green); 
    glBegin(GL_LINES);
-      glVertex2f(0,-1);
-      glVertex2f(0,1);
+      glVertex2f(0,-win);
+      glVertex2f(0,win);
    glEnd();
 
    //eixo x
    set_color(red); 
    glBegin(GL_LINES);
-      glVertex2f(-1,0);
-      glVertex2f(1,0);
+      glVertex2f(-win,0);
+      glVertex2f(win,0);
    glEnd();
 }
 
@@ -84,6 +86,35 @@ void display() {
    glFlush(); //renderiza a proxima cena
 }
 
+void mouse_event(int button, int state, int x, int y){
+   if(button == GLUT_LEFT_BUTTON){ // botao do mouse esquerdo
+      
+      if(state == GLUT_DOWN){ // se for presionado
+         win++;
+         // fazendo a mudanca de projecao
+         // zoom in
+         glMatrixMode(GL_PROJECTION);
+         glLoadIdentity();
+         gluOrtho2D(-win,win,-win,win);
+      }
+   }
+
+   if(button == GLUT_RIGHT_BUTTON){ // botao do mouse direito
+      
+      if(state == GLUT_DOWN){ //se for precionado
+        if(win > 1){
+            win--;
+            // efeito zoom out
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            gluOrtho2D(-win,win,-win,win);
+        } 
+
+         
+      }
+   }
+   glutPostRedisplay();
+}
 
 void reshape(GLsizei width, GLsizei height) { 
 
@@ -100,7 +131,8 @@ int main(int argc, char** argv) {
    glutDisplayFunc(display);       
    glutIdleFunc(display);
    glutReshapeFunc(reshape);       
-   
+   glutMouseFunc(mouse_event);
+
    init();                          
    glutMainLoop();    //loop
    return 0;
