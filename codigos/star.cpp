@@ -8,11 +8,13 @@
 #include <stdio.h>
 #include <unistd.h>
 float color[] = {1,1,0};   // amarelo
-int p = 5;
+int p = 5; // numeros de pontas 
+
 // seleciona a cor
 void set_color(float color[]){
    glColor3f(color[0], color[1], color[2]);
 }
+
 void star(float raio, float cx, float cy, int pt){
    float ang, x, y, ang1;
 
@@ -20,7 +22,7 @@ void star(float raio, float cx, float cy, int pt){
    pt = 360 / pt;
    
    glBegin(GL_POLYGON);
-      for(int i=0; i<=360; i+=pt){
+      for(int i=0; i<=360-pt; i+=pt){
          ang = (i * M_PI) / 180.0; //tranforma em radianos o angulo
          x = cx + (cos(ang) * raio);
          y = cy + (sin(ang) * raio);
@@ -34,6 +36,7 @@ void star(float raio, float cx, float cy, int pt){
          // calculando o ponto medio
          float pmx = (x + px) / 2.0; 
          float pmy = (y + py) / 2.0;
+         
          //angulo medio
          ang = (ang + ang1) / 2.0;
          
@@ -55,19 +58,28 @@ void display() {
 
    star(0.2f,0,0,p);
    
-   if(p <= 20){
-      p++;
-   }
-   else{
-      p = 5;
-   }
-
    glFlush();
-   sleep(1);
+   //sleep(1);
 }
 
 void reshape(GLsizei width, GLsizei height) {  
    
+}
+
+void key_press(unsigned char key, int x, int y){
+   // ENTER
+   if(key == 13){
+      if(p < 20){
+         p++;
+      }
+      else{
+         p = 5;
+      }
+   }
+
+   if (key == 27){
+      exit(0);
+   }
 }
  
 int main(int argc, char** argv) {
@@ -80,7 +92,8 @@ int main(int argc, char** argv) {
    glutDisplayFunc(display);       
    glutIdleFunc(display);
    glutReshapeFunc(reshape);       
-   
+   glutKeyboardFunc(key_press);
+
    init();                        
    glutMainLoop();                 
    return 0;
