@@ -76,7 +76,7 @@ void key_press(unsigned char key, int x, int y){
          p = 5;
       }
    }
-
+   // ESC 
    if (key == 27){
       exit(0);
    }
