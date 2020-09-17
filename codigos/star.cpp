@@ -6,9 +6,10 @@
 #include <GL/freeglut.h>
 #include <math.h>
 #include <stdio.h>
-#include <unistd.h>
+
 float color[] = {1,1,0};   // amarelo
-int p = 5; // numeros de pontas 
+int p = 5;                // numeros de pontas 
+bool start = false;      // flag de controle da animacao (5 a 20 pontas)
 
 // seleciona a cor
 void set_color(float color[]){
@@ -57,7 +58,11 @@ void display() {
    glClear(GL_COLOR_BUFFER_BIT);
 
    star(0.2f,0,0,p);
-   
+   if(start == true){
+       if(p < 20){
+         p++;
+      }
+   }
    glFlush();
    //sleep(1);
 }
@@ -69,12 +74,7 @@ void reshape(GLsizei width, GLsizei height) {
 void key_press(unsigned char key, int x, int y){
    // ENTER
    if(key == 13){
-      if(p < 20){
-         p++;
-      }
-      else{
-         p = 5;
-      }
+      start = true;
    }
    // ESC 
    if (key == 27){
