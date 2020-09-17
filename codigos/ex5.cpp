@@ -1,4 +1,5 @@
 /*
+ * Efeito zoom
  * To compile with windows -lfreeglut -lglu32 -lopengl32
  * To compile linux -lglut -lGL -lGLU -lm 
  */
