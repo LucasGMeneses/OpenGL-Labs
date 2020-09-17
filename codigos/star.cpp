@@ -34,7 +34,7 @@ void star(float raio, float cx, float cy, int pt){
          // calculando o ponto medio
          float pmx = (x + px) / 2.0; 
          float pmy = (y + py) / 2.0;
-         
+         //angulo medio
          ang = (ang + ang1) / 2.0;
          
          pmx = pmx + (cos(ang) * raio);
