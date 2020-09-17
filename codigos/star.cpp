@@ -6,16 +6,44 @@
 #include <GL/freeglut.h>
 #include <math.h>
 #include <stdio.h>
-
-float red[] = {1,0,0};   // vermelho
-float green[] = {0,1,0}; // verde
-float blue[] = {0,0,1};  // blue
-
+#include <unistd.h>
+float color[] = {1,1,0};   // amarelo
+int p = 5;
 // seleciona a cor
 void set_color(float color[]){
    glColor3f(color[0], color[1], color[2]);
 }
+void star(float raio, float cx, float cy, int pt){
+   float ang, x, y, ang1;
 
+  set_color(color);
+   pt = 360 / pt;
+   
+   glBegin(GL_POLYGON);
+      for(int i=0; i<=360; i+=pt){
+         ang = (i * M_PI) / 180.0; //tranforma em radianos o angulo
+         x = cx + (cos(ang) * raio);
+         y = cy + (sin(ang) * raio);
+         glVertex2f(x,y);
+         
+         // encontra o proximo ponto do poligono interno da estrela
+         ang1 = ((i + pt) * M_PI) / 180.0; 
+         
+         float px = cx + (cos(ang1) * raio);
+         float py = cy + (sin(ang1) * raio);
+         // calculando o ponto medio
+         float pmx = (x + px) / 2.0; 
+         float pmy = (y + py) / 2.0;
+         
+         ang = (ang + ang1) / 2.0;
+         
+         pmx = pmx + (cos(ang) * raio);
+         pmy = pmy + (sin(ang) * raio);
+         glVertex2f(pmx,pmy);
+      }
+   glEnd();
+
+}
 void init() {
    
     glClearColor(0, 0, 0, 1);
@@ -24,9 +52,18 @@ void init() {
 void display() {
 
    glClear(GL_COLOR_BUFFER_BIT);
-   //draw objects//
+
+   star(0.2f,0,0,p);
    
+   if(p <= 20){
+      p++;
+   }
+   else{
+      p = 5;
+   }
+
    glFlush();
+   sleep(1);
 }
 
 void reshape(GLsizei width, GLsizei height) {  
