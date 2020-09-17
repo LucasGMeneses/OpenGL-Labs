@@ -58,13 +58,14 @@ void display() {
    glClear(GL_COLOR_BUFFER_BIT);
 
    star(0.2f,0,0,p);
+
+   // verifica se pode dar inicio a animacao
    if(start == true){
        if(p < 20){
          p++;
       }
    }
    glFlush();
-   //sleep(1);
 }
 
 void reshape(GLsizei width, GLsizei height) {  
