@@ -122,7 +122,7 @@ void reshape(GLsizei width, GLsizei height) {
 
 int main(int argc, char** argv) {
    glutInit(&argc, argv);          
-   
+    
    //config da janela
    glutInitWindowSize(480, 480);   
    glutInitWindowPosition(50, 50); 
