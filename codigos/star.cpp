@@ -73,14 +73,17 @@ void reshape(GLsizei width, GLsizei height) {
 }
 
 void key_press(unsigned char key, int x, int y){
-   // ENTER
-   if(key == 13){
-      start = true;
+
+   switch (key){
+      case 13:        // ENTER
+         start = true;
+         break;
+      case 27:        // ESC
+         exit(0);
+      default:
+         break;
    }
-   // ESC 
-   if (key == 27){
-      exit(0);
-   }
+  
 }
  
 int main(int argc, char** argv) {
