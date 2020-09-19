@@ -22,7 +22,7 @@ void star(float raio, float cx, float cy, int pt){
   set_color(color);
    pt = 360 / pt;
    
-   glBegin(GL_POLYGON);
+   glBegin(GL_LINE_LOOP);
       for(int i=0; i<=360-pt; i+=pt){
          ang = (i * M_PI) / 180.0; //tranforma em radianos o angulo
          x = cx + (cos(ang) * raio);
