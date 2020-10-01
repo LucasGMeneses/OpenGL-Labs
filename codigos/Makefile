@@ -1,5 +1,5 @@
 all:
-	g++ star.cpp -o app -lglut -lGLU -lGL
+	g++ star.cpp -o app -lglut -lGL -lGLU -lm 
 	./app
 run:
 	./app
