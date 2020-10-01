@@ -1,5 +1,6 @@
 /*
  * Estrela de 5 a 20 pontas
+ * Presionar ENTER para aumentar a quantidade pontas e ESC para sair
  * To compile with windows -lfreeglut -lglu32 -lopengl32
  * To compile linux -lglut -lGL -lGLU -lm 
  */
@@ -9,7 +10,6 @@
 
 float color[] = {1,1,0};   // amarelo
 int p = 5;                // numeros de pontas 
-bool start = false;      // flag de controle da animacao (5 a 20 pontas)
 
 // seleciona a cor
 void set_color(float color[]){
@@ -59,12 +59,6 @@ void display() {
 
    star(0.2f,0,0,p);
 
-   // verifica se pode dar inicio a animacao
-   if(start == true){
-       if(p < 20){
-         p++;
-      }
-   }
    glFlush();
 }
 
@@ -76,7 +70,9 @@ void key_press(unsigned char key, int x, int y){
 
    switch (key){
       case 13:        // ENTER
-         start = true;
+         if(p < 20){
+            p++;
+         }
          break;
       case 27:        // ESC
          exit(0);
@@ -91,7 +87,7 @@ int main(int argc, char** argv) {
    
    glutInitWindowSize(480, 480);  
    glutInitWindowPosition(50, 50); 
-   glutCreateWindow("Window");  
+   glutCreateWindow("Star");  
    
    glutDisplayFunc(display);       
    glutIdleFunc(display);
