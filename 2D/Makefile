@@ -1,5 +1,5 @@
 all:
-	g++ star.cpp -o app -lglut -lGL -lGLU -lm 
+	g++ triangleRot.cpp -o app -lglut -lGL -lGLU -lm 
 	./app
 run:
 	./app
