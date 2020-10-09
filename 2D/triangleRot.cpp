@@ -1,6 +1,7 @@
 /*
+ * Rotacionando o triangulo no seu proprio eixo
  * Precione ESPACO p/ Rotacionar ou ESC para Sair
- *  To compile with windows -lfreeglut -lglu32 -lopengl32
+ * To compile with windows -lfreeglut -lglu32 -lopengl32
  * To compile linux -lglut -lGL -lGLU -lm 
  */
 #include <GL/freeglut.h>  // ou glut.h - GLUT, include glu.h and gl.h
