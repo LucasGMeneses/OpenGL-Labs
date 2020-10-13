@@ -10,7 +10,8 @@
 GLfloat matrix[16]; // matriz de transformacao
 
 float white[] = {1,1,1}; // branco
-bool start = false;
+bool start = true;
+
 
 // seleciona a cor
 void setColor(float color[]){
@@ -35,7 +36,7 @@ void triangle(float x0, float y0, float x1, float y1, float x2, float y2, float 
 }
 
 void init() {
-   printf("Precione ESPACO p/ Rotacionar ou ESC para Sair\n\n");
+   ///printf("Precione ESPACO p/ Rotacionar ou ESC para Sair\n\n");
    glClearColor(0, 0, 0, 1);
 
 
@@ -48,7 +49,7 @@ void display() {
    if(start == true){
       printf("Matriz Original\n");
       printMatrix();
-      
+
       glTranslatef(0.5f,0.5f,0); // translada o eixo para a posicao(0.5,0.5)
       printf("Matriz dps da Translacao\n");
       printMatrix();
@@ -62,7 +63,7 @@ void display() {
       printMatrix();
       
    }
-   triangle(0,0,1,0,0.5f,1,white);
+   triangle(0,0,1,0,0.5f,1,gray2);
    glPopMatrix();
 
    glFlush();  // Render now

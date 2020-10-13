@@ -1,5 +1,5 @@
 all:
-	g++ 2D/triangleRot.cpp -o app -lglut -lGL -lGLU -lm 
+	g++ 2D/transforms.cpp -o app -lglut -lGL -lGLU -lm 
 	./app
 run:
 	./app
