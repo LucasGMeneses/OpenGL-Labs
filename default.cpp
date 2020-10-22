@@ -8,6 +8,7 @@
  /* Initialize OpenGL Graphics */
 void init() {
    // Set "clearing" or background color
+
     glClearColor(0, 0, 0, 1); // Black and opaque
 }
 /* Handler for window-repaint event. Call back when the window first appears and
