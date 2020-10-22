@@ -6,8 +6,8 @@
 #include <math.h>
 #include <stdio.h>
 
-GLfloat matrix[16] = {0}; // matriz de transformacao
-float size = 9;
+GLfloat matrix[16]; // matriz de transformacao
+float size = 3;
 float white[] = {1,1,1}; // branco
 
 // seleciona a cor
@@ -45,25 +45,14 @@ void init() {
 }
 
 void display() {
-   glClear(GL_COLOR_BUFFER_BIT);         
-   
+   glClear(GL_COLOR_BUFFER_BIT);
    // trianglulo original
    triangle(0,0,1,0,0.5,1,white);
-
-   // transladando para (3,1)
-   glTranslatef(3,1,0);
-
-  // escalonando 3x
-   glScalef(3,3,3);
-
-   // transladando para (0,1)
-   glTranslatef(0,1,0);
+   // transladando para (1,1)
+   glTranslatef(1,1,0);
 
    // rotacionando 
-   glRotatef(60,0,0,1);
-
-   // transladando para (0,1)
-   glTranslatef(0,-1,0);
+   glRotatef(30,0,0,1);
 
    // triangulo transformado
    darkening(); // deixar um pouco mais cinza
@@ -75,10 +64,10 @@ void display() {
 }
 
 
-void reshape(GLsizei width, GLsizei height) {  
-      
+void reshape(GLsizei width, GLsizei height) { 
+
       glMatrixMode(GL_PROJECTION);
-		glOrtho(-size, size, -size, size, 0, size);
+      glOrtho(-size, size, -size, size, 0, size);
 
       glMatrixMode(GL_MODELVIEW);
       glLoadIdentity();
@@ -89,11 +78,10 @@ int main(int argc, char** argv) {
    
    glutInitWindowSize(480, 480);   // Set the window's initial width & height - non-square
    glutInitWindowPosition(50, 50); // Position the window's initial top-left corner
-   glutCreateWindow("Triangle$");  // Create window with the given title
+   glutCreateWindow("Triangle5");  // Create window with the given title
    
    glutDisplayFunc(display);       // Register callback handler for window re-paint event
    glutReshapeFunc(reshape);       // Register callback handler for window re-size event
-   
    init();                          // Our own OpenGL initialization
    glutMainLoop();                 // Enter the infinite event-processing loop
    return 0;
