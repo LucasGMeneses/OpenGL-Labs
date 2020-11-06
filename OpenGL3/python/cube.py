@@ -8,9 +8,10 @@ from OpenGL.GLUT import *
 vao = None
 vbo = None
 shaderProgram = None
-uMat = None
-matTrans = None
+uMat = None            # variavel uniforme
+matTrans = None        # matriz de transformação
 
+# gera a matriz de Translação
 def matrixTranslate(x,y,z):
 	matId = np.eye(4, dtype='f')
 	matId[0][3] = x
@@ -19,6 +20,7 @@ def matrixTranslate(x,y,z):
 	#print(matId)
 	return matId
 
+# gera a matriz de Escala
 def matrixScale(x,y,z):
 	matId = np.eye(4, dtype='f')
 	matId[0][0] = x
@@ -26,9 +28,11 @@ def matrixScale(x,y,z):
 	matId[2][2] = z
 	return matId
 
+# gera a matriz de Rotacao em relação a um dos eixos (x, y ou z)
 def matrixRotate(ang, axis='z'):
 	rad = (ang/180) * math.pi
 	matId = np.eye(4, dtype='f')
+	
 	if axis == 'z':
 		matId[0][0] =   math.cos(rad)
 		matId[1][1] =   math.cos(rad)
@@ -52,6 +56,8 @@ def matrixRotate(ang, axis='z'):
 	else:
 		print("Eixo invalido!!!")
 	return matId 
+
+# le os arquivos do shaders
 def readShaderFile(filename):
 	with open('shader/' + filename, 'r') as myfile:
 		return myfile.read()
@@ -63,11 +69,12 @@ def init():
 	global matTrans
 	global uMat
 
-	matTrans = matrixTranslate(0, 0, 0.5)
+	matT = matrixTranslate(0, 0, 0.5)
 
 	matS = matrixScale(0.5,0.5,0.5)
-	
-	matTrans = np.dot(matS,matTrans)
+
+	# cria a matriz de transformação
+	matTrans = np.dot(matS,matT)
 	print(matTrans)
 
 	glClearColor(0, 0, 0, 0)
@@ -84,11 +91,8 @@ def init():
 	vao = GLuint(0)
 	glGenVertexArrays(1, vao)
 	glBindVertexArray(vao)
-	
-	
-	#print(matTrans[3][0])
 
-	# Create and bind the Vertex Buffer Object
+	# Create and bind the Vertex Buffer Object (CUBE 3D)
 	vertices = np.array(
 		[[-1.0,-1.0,-1.0],
 		[-1.0,-1.0, 1.0],
