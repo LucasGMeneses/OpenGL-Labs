@@ -51,7 +51,7 @@ OpenGLContext::~OpenGLContext() {
 
 void OpenGLContext::initialize() {
 	// Set "clearing" or background color
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black and opaque
+	glClearColor(0.0, 0.0, 0.0, 1.0); // Black and opaque
 
 	// Create and compile our GLSL program from the shaders
 	GLint vertexShaderId = this->loadAndCompileShader("shader/hello.vp",
@@ -65,9 +65,9 @@ void OpenGLContext::initialize() {
 	glBindVertexArray(static_cast<GLuint>(this->VAOId));
 
 	// Set up vertex data (and buffer(s)) and attribute pointers
-	GLfloat vertices[] = { -0.5f, -0.5f, 0.0f,        0.0f, 1.0f, 0.0f,// Left
-			0.5f, -0.5f, 0.0f,                        0.0f, 1.0f, 0.0f,// Right
-			0.0f, 0.5f, 0.0f,                         0.0f, 1.0f, 0.0f, // Top
+	GLfloat vertices[] = { -0.5f, -0.5f, 0.0,        0.0, 1.0, 0.0,// Left
+			0.5f, -0.5f, 0.0,                        0.0, 1.0, 0.0,// Right
+			0.0, 0.5f, 0.0,                         0.0, 1.0, 0.0, // Top
 			};
 	glGenBuffers(1, static_cast<GLuint*>(&this->VBOId));
 	glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(this->VBOId));

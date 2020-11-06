@@ -33,8 +33,8 @@ def init():
 	global uniColor
 	glClearColor(0, 0, 0, 0);
 	
-	vertex_code = readShaderFile('hello.vp')
-	fragment_code = readShaderFile('hello.fp')
+	vertex_code = readShaderFile('ice.vp')
+	fragment_code = readShaderFile('ice.fp')
 
 	# compile shaders and program
 	vertexShader = shaders.compileShader(vertex_code, GL_VERTEX_SHADER)

@@ -1,6 +1,6 @@
 import sys
 import numpy as np
-
+import math 
 from OpenGL.GL import *
 from OpenGL.GL import shaders
 from OpenGL.GLUT import *
@@ -8,7 +8,50 @@ from OpenGL.GLUT import *
 vao = None
 vbo = None
 shaderProgram = None
+uMat = None
+matTrans = None
 
+def matrixTranslate(x,y,z):
+	matId = np.eye(4, dtype='f')
+	matId[0][3] = x
+	matId[1][3] = y
+	matId[2][3] = z
+	#print(matId)
+	return matId
+
+def matrixScale(x,y,z):
+	matId = np.eye(4, dtype='f')
+	matId[0][0] = x
+	matId[1][1] = y
+	matId[2][2] = z
+	return matId
+
+def matrixRotate(ang, axis='z'):
+	rad = (ang/180) * math.pi
+	matId = np.eye(4, dtype='f')
+	if axis == 'z':
+		matId[0][0] =   math.cos(rad)
+		matId[1][1] =   math.cos(rad)
+
+		matId[0][1] = - math.sin(rad)
+		matId[1][0] =   math.sin(rad)
+
+	elif axis == 'x':
+		matId[0][0] =   math.cos(rad)
+		matId[2][2] =   math.cos(rad)
+
+		matId[2][0] = - math.sin(rad)
+		matId[0][2] =   math.sin(rad)
+
+	elif axis == 'y':
+		matId[1][1] =   math.cos(rad)
+		matId[2][2] =   math.cos(rad)
+
+		matId[1][2] = - math.sin(rad)
+		matId[2][1] =   math.sin(rad)
+	else:
+		print("Eixo invalido!!!")
+	return matId 
 def readShaderFile(filename):
 	with open('shader/' + filename, 'r') as myfile:
 		return myfile.read()
@@ -17,11 +60,20 @@ def init():
 	global shaderProgram
 	global vao
 	global vbo
+	global matTrans
+	global uMat
+
+	matTrans = matrixTranslate(0, 0, 0.5)
+
+	matS = matrixScale(0.5,0.5,0.5)
 	
-	glClearColor(0, 0, 0, 0);
+	matTrans = np.dot(matS,matTrans)
+	print(matTrans)
+
+	glClearColor(0, 0, 0, 0)
 	
-	vertex_code = readShaderFile('hello.vp')
-	fragment_code = readShaderFile('hello.fp')
+	vertex_code = readShaderFile('cube.vp')
+	fragment_code = readShaderFile('cube.fp')
 
 	# compile shaders and program
 	vertexShader = shaders.compileShader(vertex_code, GL_VERTEX_SHADER)
@@ -32,9 +84,49 @@ def init():
 	vao = GLuint(0)
 	glGenVertexArrays(1, vao)
 	glBindVertexArray(vao)
+	
+	
+	#print(matTrans[3][0])
 
 	# Create and bind the Vertex Buffer Object
-	vertices = np.array([[0, 0, 0], [-1, -1, 0], [1, -1, 0]], dtype='f')
+	vertices = np.array(
+		[[-1.0,-1.0,-1.0],
+		[-1.0,-1.0, 1.0],
+		[-1.0, 1.0, 1.0],
+		[1.0, 1.0,-1.0],
+		[-1.0,-1.0,-1.0],
+		[-1.0, 1.0,-1.0],
+		[1.0,-1.0, 1.0],
+		[-1.0,-1.0,-1.0],
+		[1.0,-1.0,-1.0],
+		[1.0, 1.0,-1.0],
+		[1.0,-1.0,-1.0],
+		[-1.0,-1.0,-1.0],
+		[-1.0,-1.0,-1.0],
+		[-1.0, 1.0, 1.0],
+		[-1.0, 1.0,-1.0],
+		[1.0,-1.0, 1.0],
+		[-1.0,-1.0, 1.0],
+		[-1.0,-1.0,-1.0],
+		[-1.0, 1.0, 1.0],
+		[-1.0,-1.0, 1.0],
+		[1.0,-1.0, 1.0],
+		[1.0, 1.0, 1.0],
+		[1.0,-1.0,-1.0],
+		[1.0, 1.0,-1.0],
+		[1.0,-1.0,-1.0],
+		[1.0, 1.0, 1.0],
+		[1.0,-1.0, 1.0],
+		[1.0, 1.0, 1.0],
+		[1.0, 1.0,-1.0],
+		[-1.0, 1.0,-1.0],
+		[1.0, 1.0, 1.0],
+		[-1.0, 1.0,-1.0],
+		[-1.0, 1.0, 1.0],
+		[1.0, 1.0, 1.0],
+		[-1.0, 1.0, 1.0],
+		[1.0,-1.0, 1.0]], dtype='f')
+
 	vbo = glGenBuffers(1)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo)
 	glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW)
@@ -42,6 +134,9 @@ def init():
 	glBindAttribLocation(shaderProgram, 0, 'vertexPosition')  # name of attribute in shader
 	glEnableVertexAttribArray(0);  # 0=location do atributo, tem que ativar todos os atributos inicialmente sao desabilitados por padrao
 	
+	# atribui uma variavel uniforme para matriz de transformacao
+	uMat = glGetUniformLocation(shaderProgram, "matTrans")
+
 	# Note that this is allowed, the call to glVertexAttribPointer registered VBO
 	# as the currently bound vertex buffer object so afterwards we can safely unbind
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -58,9 +153,9 @@ def display():
 	glUseProgram(shaderProgram)
 	glBindVertexArray(vao)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo)
-	
+	glUniformMatrix4fv(uMat, 1, GL_FALSE, matTrans)
 	# glDrawArrays( mode , first, count)
-	glDrawArrays(GL_TRIANGLES, 0, 3)
+	glDrawArrays(GL_LINES, 0, 36)
 
 	#clean things up
 	glBindBuffer(GL_ARRAY_BUFFER, 0)
@@ -72,6 +167,8 @@ def display():
 def reshape(width, height):
 	glViewport(0, 0, width, height)
 
+
+
 if __name__ == '__main__':
 	glutInit(sys.argv)
 	glutInitContextVersion(3, 0)
@@ -79,7 +176,7 @@ if __name__ == '__main__':
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
 	
 	glutInitWindowSize(640, 640);
-	glutCreateWindow(b'Hello world!')
+	glutCreateWindow(b'cube 3D!')
 	
 	glutReshapeFunc(reshape)
 	glutDisplayFunc(display)
