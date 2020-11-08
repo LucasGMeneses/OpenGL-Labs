@@ -68,15 +68,17 @@ def init():
 	global vbo
 	global matTrans
 	global uMat
-
+	
+	# cria a matriz de transformação
 	matT = matrixTranslate(0, 0, 0.5)
 	matR = matrixRotate(30,'x')
-	print(matR)
 	matS = matrixScale(0.3,0.3,0.3)
-
-	# cria a matriz de transformação
+	
+	# multplicacao das matrizes
 	matTrans = np.dot(matR,matS)
 	matTrans = np.dot(matTrans,matT)
+
+	print('Matriz de Transformação')
 	print(matTrans)
 
 	glClearColor(0, 0, 0, 0)
