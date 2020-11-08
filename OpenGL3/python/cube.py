@@ -41,18 +41,18 @@ def matrixRotate(ang, axis='z'):
 		matId[1][0] =   math.sin(rad)
 
 	elif axis == 'x':
-		matId[0][0] =   math.cos(rad)
-		matId[2][2] =   math.cos(rad)
-
-		matId[2][0] = - math.sin(rad)
-		matId[0][2] =   math.sin(rad)
-
-	elif axis == 'y':
 		matId[1][1] =   math.cos(rad)
 		matId[2][2] =   math.cos(rad)
 
 		matId[1][2] = - math.sin(rad)
 		matId[2][1] =   math.sin(rad)
+
+	elif axis == 'y':
+		matId[0][0] =   math.cos(rad)
+		matId[2][2] =   math.cos(rad)
+
+		matId[2][0] = - math.sin(rad)
+		matId[0][2] =   math.sin(rad)
 	else:
 		print("Eixo invalido!!!")
 	return matId 
@@ -70,11 +70,13 @@ def init():
 	global uMat
 
 	matT = matrixTranslate(0, 0, 0.5)
-
-	matS = matrixScale(0.5,0.5,0.5)
+	matR = matrixRotate(30,'x')
+	print(matR)
+	matS = matrixScale(0.3,0.3,0.3)
 
 	# cria a matriz de transformação
-	matTrans = np.dot(matS,matT)
+	matTrans = np.dot(matR,matS)
+	matTrans = np.dot(matTrans,matT)
 	print(matTrans)
 
 	glClearColor(0, 0, 0, 0)
@@ -158,8 +160,9 @@ def display():
 	glBindVertexArray(vao)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo)
 	glUniformMatrix4fv(uMat, 1, GL_FALSE, matTrans)
-	# glDrawArrays( mode , first, count)
-	glDrawArrays(GL_LINES, 0, 36)
+	#glDrawArrays( mode , first, count)
+	#glDrawArrays(GL_LINES, 0, 36)
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 36)
 
 	#clean things up
 	glBindBuffer(GL_ARRAY_BUFFER, 0)
