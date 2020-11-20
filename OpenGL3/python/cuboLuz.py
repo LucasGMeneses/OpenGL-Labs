@@ -10,8 +10,9 @@ from OpenGL.GLUT import *
 vao = None
 vbo = None
 shaderProgram = None
-uMat = None            # variavel uniforme
-model = None        # matriz de transformação
+model = None
+idMod = None            # variavel uniforme
+
 
 # le os arquivos do shaders
 def readShaderFile(filename):
@@ -23,8 +24,7 @@ def init():
 	global vao
 	global vbo
 	global model
-	global uMat
-	
+	global idMod
 
 	glClearColor(0, 0, 0, 0)
 	
@@ -100,7 +100,7 @@ def init():
 
 	model = pyrr.matrix44.multiply(model,rotT)
 	# atribui uma variavel uniforme para matriz de transformacao
-	uMat = glGetUniformLocation(shaderProgram, "model")
+	idMod = glGetUniformLocation(shaderProgram, "model")
 
 	# Note that this is allowed, the call to glVertexAttribPointer registered VBO
 	# as the currently bound vertex buffer object so afterwards we can safely unbind
@@ -118,7 +118,7 @@ def display():
 	glUseProgram(shaderProgram)
 	glBindVertexArray(vao)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo)
-	glUniformMatrix4fv(uMat, 1, GL_FALSE, model)
+	glUniformMatrix4fv(idMod, 1, GL_FALSE, model)
 	#glDrawArrays( mode , first, count)
 	#glDrawArrays(GL_LINES, 0, 36)
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 100)
