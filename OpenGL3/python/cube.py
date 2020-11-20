@@ -138,6 +138,7 @@ def init():
 	vbo = glGenBuffers(1)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo)
 	glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW)
+	
 	glVertexAttribPointer(0, 3, GL_FLOAT, False, 0, None)  # first 0 is the location in shader
 	glBindAttribLocation(shaderProgram, 0, 'vertexPosition')  # name of attribute in shader
 	glEnableVertexAttribArray(0);  # 0=location do atributo, tem que ativar todos os atributos inicialmente sao desabilitados por padrao

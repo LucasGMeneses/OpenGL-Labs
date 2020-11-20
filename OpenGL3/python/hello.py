@@ -34,13 +34,15 @@ def init():
 	glBindVertexArray(vao)
 
 	# Create and bind the Vertex Buffer Object
-	vertices = np.array([[0, 0, 0], [-1, -1, 0], [1, -1, 0]], dtype='f')
+	vertices = np.array([[0, 0, 0, 0, 0, 1], [-1, -1, 0, 1, 1, 0], [1, -1, 0, 0, 1, 0]], dtype='f')
 	vbo = glGenBuffers(1)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo)
 	glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW)
-	glVertexAttribPointer(0, 3, GL_FLOAT, False, 0, None)  # first 0 is the location in shader
-	glBindAttribLocation(shaderProgram, 0, 'vertexPosition')  # name of attribute in shader
+	glVertexAttribPointer(0, 3, GL_FLOAT, False, 6 * sizeof(GLfloat), ctypes.c_void_p(0))  # first 0 is the location in shader
+	glVertexAttribPointer(1, 3, GL_FLOAT, False, 6 * sizeof(GLfloat), ctypes.c_void_p(3*sizeof(GLfloat)))  # first 0 is the location in shader
+
 	glEnableVertexAttribArray(0);  # 0=location do atributo, tem que ativar todos os atributos inicialmente sao desabilitados por padrao
+	glEnableVertexAttribArray(1);  # 1=location do atributo, tem que ativar todos os atributos inicialmente sao desabilitados por padrao
 	
 	# Note that this is allowed, the call to glVertexAttribPointer registered VBO
 	# as the currently bound vertex buffer object so afterwards we can safely unbind
