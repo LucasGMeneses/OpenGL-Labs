@@ -2,7 +2,9 @@ import sys
 import numpy as np
 import math 
 
-import pyrr 
+import pywavefront as obj
+from pyrr import matrix44, Vector3
+
 from OpenGL.GL import *
 from OpenGL.GL import shaders
 from OpenGL.GLUT import *
@@ -10,9 +12,27 @@ from OpenGL.GLUT import *
 vao = None
 vbo = None
 shaderProgram = None
-model = None
-idMod = None            # variavel uniforme
+model = None			# a matriz model
+idMod = None            # id matriz model shaders
+view = None			   	# a matriz view
+idView = None           # id matriz view shaders
+projection = None		# a matriz projection
+idProj = None           # id matriz projection shaders
 
+# iluminação
+idColor = None
+idLight = None
+idLightPos = None
+idViewPos = None
+
+def readObjFile(path):
+	return obj.Wavefront(path)
+
+def readVertexData():
+	aux = readObjFile('python/cube.obj')
+	aux.parse()
+	for name, material in aux.materials.items():
+		return material.vertices
 
 # le os arquivos do shaders
 def readShaderFile(filename):
@@ -25,6 +45,14 @@ def init():
 	global vbo
 	global model
 	global idMod
+	global view			   	
+	global idView           
+	global projection
+	global idProj 
+	global idColor
+	global idLight
+	global idLightPos
+	global idViewPos
 
 	glClearColor(0, 0, 0, 0)
 	
@@ -36,71 +64,52 @@ def init():
 	fragmentShader = shaders.compileShader(fragment_code, GL_FRAGMENT_SHADER)
 	shaderProgram = shaders.compileProgram(vertexShader, fragmentShader)
 	
-	# Create and bind the Vertex Array Object
+	# cria um vao
 	vao = GLuint(0)
 	glGenVertexArrays(1, vao)
 	glBindVertexArray(vao)
 
-	# Create and bind the Vertex Buffer Object (CUBE 3D)
-	vertices = np.array(
-		[[-1.0,-1.0,-1.0],
-		[-1.0,-1.0, 1.0],
-		[-1.0, 1.0, 1.0],
-		[1.0, 1.0,-1.0],
-		[-1.0,-1.0,-1.0],
-		[-1.0, 1.0,-1.0],
-		[1.0,-1.0, 1.0],
-		[-1.0,-1.0,-1.0],
-		[1.0,-1.0,-1.0],
-		[1.0, 1.0,-1.0],
-		[1.0,-1.0,-1.0],
-		[-1.0,-1.0,-1.0],
-		[-1.0,-1.0,-1.0],
-		[-1.0, 1.0, 1.0],
-		[-1.0, 1.0,-1.0],
-		[1.0,-1.0, 1.0],
-		[-1.0,-1.0, 1.0],
-		[-1.0,-1.0,-1.0],
-		[-1.0, 1.0, 1.0],
-		[-1.0,-1.0, 1.0],
-		[1.0,-1.0, 1.0],
-		[1.0, 1.0, 1.0],
-		[1.0,-1.0,-1.0],
-		[1.0, 1.0,-1.0],
-		[1.0,-1.0,-1.0],
-		[1.0, 1.0, 1.0],
-		[1.0,-1.0, 1.0],
-		[1.0, 1.0, 1.0],
-		[1.0, 1.0,-1.0],
-		[-1.0, 1.0,-1.0],
-		[1.0, 1.0, 1.0],
-		[-1.0, 1.0,-1.0],
-		[-1.0, 1.0, 1.0],
-		[1.0, 1.0, 1.0],
-		[-1.0, 1.0, 1.0],
-		[1.0,-1.0, 1.0]], dtype='f')
-	
-	vbo = glGenBuffers(1)
+	# dados do objeto q serao passados para o shaders (vertices e vetores normais)
+	vertices = np.array(readVertexData(), dtype='f')
+	print("vertices:", len(vertices)//6)
+	print(vertices)
+
+	vbo = glGenBuffers(1) # gera vbos
 	glBindBuffer(GL_ARRAY_BUFFER, vbo)
 	glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW)
-	glVertexAttribPointer(0, 3, GL_FLOAT, False, 3 * sizeof(GLfloat), ctypes.c_void_p(0))  # first 0 is the location in shader
-	#glVertexAttribPointer(1, 3, GL_FLOAT, False, 6 * sizeof(GLfloat), ctypes.c_void_p(3*sizeof(GLfloat)))  # first 0 is the location in shader
-	#glVertexAttribPointer(0, 3, GL_FLOAT, False, 0, None)  # first 0 is the location in shader
-	#glBindAttribLocation(shaderProgram, 0, 'vertexPosition')  # name of attribute in shader
-	glEnableVertexAttribArray(0)  # 0=location do atributo, tem que ativar todos os atributos inicialmente sao desabilitados por padrao
-	glEnableVertexAttribArray(1)  # 0=location do atributo, tem que ativar todos os atributos inicialmente sao desabilitados por padrao
+	glVertexAttribPointer(0, 3, GL_FLOAT, False, 6 * sizeof(GLfloat), ctypes.c_void_p(3*sizeof(GLfloat)))  # vertices
+	glVertexAttribPointer(1, 3, GL_FLOAT, False, 6 * sizeof(GLfloat), ctypes.c_void_p(0))  # vertores normais
+	
+	# habilita os atributos
+	glEnableVertexAttribArray(0) 
+	glEnableVertexAttribArray(1)
+	  
 	# cria a matriz de transformação
-	model = pyrr.matrix44.create_identity()
-	scale = pyrr.matrix44.create_from_scale([0.3,0.3,0.3],dtype='f')
-	model = pyrr.matrix44.multiply(model,scale)
+	model = matrix44.create_identity()
 
-	rotY = pyrr.matrix44.create_from_y_rotation(math.radians(45))
-	rotx = pyrr.matrix44.create_from_x_rotation(math.radians(45))
-	rotT = pyrr.matrix44.multiply(rotY,rotx)
+	#ratacoes
+	rotY = matrix44.create_from_y_rotation(math.radians(45))
+	rotx = matrix44.create_from_x_rotation(math.radians(45))
+	rotT = matrix44.multiply(rotY,rotx)
 
-	model = pyrr.matrix44.multiply(model,rotT)
-	# atribui uma variavel uniforme para matriz de transformacao
+	model = matrix44.multiply(model,rotT) 
+
+	view = matrix44.create_identity()
+	projection = matrix44.create_orthogonal_projection(-2.0, 2.0, -2.0, 2.0, 2.0, -2.0) # amplia a visao
+	print(f'Model:\n{model}\n')
+	print(f'View:\n{view}\n')
+	print(f'Projection:\n{projection}\n')
+
+	# atribui uma variavel uniforme para cada matriz
 	idMod = glGetUniformLocation(shaderProgram, "model")
+	idView = glGetUniformLocation(shaderProgram, "view")
+	idProj = glGetUniformLocation(shaderProgram, "projection")
+
+	# iluminação
+	idColor = glGetUniformLocation(shaderProgram, "objectColor")
+	idLight = glGetUniformLocation(shaderProgram, "lightColor")
+	idLightPos = glGetUniformLocation(shaderProgram, "lightPos")
+	idViewPos = glGetUniformLocation(shaderProgram, "viewPos")
 
 	# Note that this is allowed, the call to glVertexAttribPointer registered VBO
 	# as the currently bound vertex buffer object so afterwards we can safely unbind
@@ -118,13 +127,19 @@ def display():
 	glUseProgram(shaderProgram)
 	glBindVertexArray(vao)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo)
+	
+	lightPos = [1.0, 0.0, 0.0] # posicao da luz
+	glUniform3fv(idLightPos, 1,lightPos)
+	glUniform3fv(idColor,1,[0.0,1.0,0.0])
+	glUniform3fv(idLight,1,[1.0,1.0,1.0])
+	glUniform3fv(idViewPos,1,[0.0,0.0,0.0])
+	
 	glUniformMatrix4fv(idMod, 1, GL_FALSE, model)
-	#glDrawArrays( mode , first, count)
-	#glDrawArrays(GL_LINES, 0, 36)
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 100)
+	glUniformMatrix4fv(idView, 1, GL_FALSE, view)
+	glUniformMatrix4fv(idProj, 1, GL_FALSE, projection)
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 42)
 
 	#clean things up
-
 	glBindBuffer(GL_ARRAY_BUFFER, 0)
 	glBindVertexArray(0)
 	glUseProgram(0)
