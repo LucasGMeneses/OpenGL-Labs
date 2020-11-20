@@ -25,13 +25,11 @@ def init():
 	global model
 	global uMat
 	
-	
-
 
 	glClearColor(0, 0, 0, 0)
 	
-	vertex_code = readShaderFile('cube.vp')
-	fragment_code = readShaderFile('cube.fp')
+	vertex_code = readShaderFile('cuboLuz.vp')
+	fragment_code = readShaderFile('cuboLuz.fp')
 
 	# compile shaders and program
 	vertexShader = shaders.compileShader(vertex_code, GL_VERTEX_SHADER)
@@ -93,7 +91,7 @@ def init():
 	glEnableVertexAttribArray(1)  # 0=location do atributo, tem que ativar todos os atributos inicialmente sao desabilitados por padrao
 	# cria a matriz de transformação
 	model = pyrr.matrix44.create_identity()
-	scale = pyrr.matrix44.create_from_scale([0.5,0.5,0.5],dtype='f')
+	scale = pyrr.matrix44.create_from_scale([0.3,0.3,0.3],dtype='f')
 	model = pyrr.matrix44.multiply(model,scale)
 
 	rotY = pyrr.matrix44.create_from_y_rotation(math.radians(45))
@@ -126,6 +124,7 @@ def display():
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 100)
 
 	#clean things up
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0)
 	glBindVertexArray(0)
 	glUseProgram(0)
@@ -144,7 +143,7 @@ if __name__ == '__main__':
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
 	
 	glutInitWindowSize(640, 640);
-	glutCreateWindow(b'cube 3D!')
+	glutCreateWindow(b'cubo Iluminado!')
 	
 	glutReshapeFunc(reshape)
 	glutDisplayFunc(display)

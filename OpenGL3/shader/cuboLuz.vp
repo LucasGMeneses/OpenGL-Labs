@@ -3,12 +3,12 @@
 uniform mat4 model;
 
 in vec3 vertexPosition;
-in vec3 dColor;
+in vec3 normal;
 
 out vec3 vColor;
 
 void main(){
   gl_Position = model * vec4(vertexPosition,1.0);
-  vColor = dColor;
+  vColor = normal;
   //or gl_Position =  vec4(vec3, 1.0);
 }

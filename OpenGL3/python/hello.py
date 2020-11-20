@@ -5,9 +5,9 @@ from OpenGL.GL import *
 from OpenGL.GL import shaders
 from OpenGL.GLUT import *
 
-vao = None;
-vbo = None;
-shaderProgram = None;
+vao = None
+vbo = None
+shaderProgram = None
 
 def readShaderFile(filename):
 	with open('shader/' + filename, 'r') as myfile:
@@ -46,9 +46,9 @@ def init():
 	
 	# Note that this is allowed, the call to glVertexAttribPointer registered VBO
 	# as the currently bound vertex buffer object so afterwards we can safely unbind
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0)
 	# Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs)
-	glBindVertexArray(0);
+	glBindVertexArray(0)
 
 def display():
 	global shaderProgram
