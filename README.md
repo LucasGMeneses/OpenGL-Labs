@@ -12,5 +12,5 @@ Disciplina de Computação Grafica
 ```
 #### Python 3
 ```
-python3 -m install PyOpenGL PyOpenGL_accelerate numpy
+python3 -m install PyOpenGL PyOpenGL_accelerate numpy pyrr PyWavefront
 ```
