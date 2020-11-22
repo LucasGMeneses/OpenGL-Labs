@@ -45,9 +45,9 @@ void streets(){
 }
 
 void blocks(){
-   float aux = 0.05;
-   float stw = 0.93; 
-   float sth = 0.20;
+   float aux = 0.05f;
+   float stw = 0.93f; 
+   float sth = 0.20f;
 
    glColor3f(0.8,0.8,0.8);
    float temp;
