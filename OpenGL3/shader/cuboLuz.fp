@@ -10,20 +10,21 @@ in vec3 fPos;
 out vec4 fcolor;
 
 void main(){
+
   // luz ambiente
   float ambientStrength = 0.1;
   vec3 ambient = ambientStrength * lightColor;
   
   
   // luz difusa
-  float difuseStregth = 0.2;
+  float difuseStregth = 1.0;
   vec3 norm = normalize(normal);
   vec3 lightDir = normalize(lightPos-fPos);
   float diff = max(dot(norm,lightDir),0.0);
   vec3 difuse = diff * lightColor * difuseStregth;
   
   // luz especular
-  float specularStregth = 0.4;
+  float specularStregth = 0.5;
   vec3 viewDir = (viewPos - fPos);
   vec3 reflectDir = reflect(-lightDir, norm);
   float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);

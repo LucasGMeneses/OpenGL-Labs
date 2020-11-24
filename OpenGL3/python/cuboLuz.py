@@ -19,6 +19,7 @@ idView = None           # id matriz view shaders
 projection = None		# a matriz projection
 idProj = None           # id matriz projection shaders
 
+posCam = None
 # iluminação
 idColor = None
 idLight = None
@@ -53,6 +54,7 @@ def init():
 	global idLight
 	global idLightPos
 	global idViewPos
+	global posCam
 
 	glClearColor(0, 0, 0, 0)
 	
@@ -94,7 +96,8 @@ def init():
 
 	model = matrix44.multiply(model,rotT) 
 
-	view = matrix44.create_identity()
+	posCam = [0.0, 0.0, 0.0]
+	view = matrix44.create_look_at(posCam, [0.0, 0.0,-0.1], [0.0, 1.0, 0.0])
 	projection = matrix44.create_orthogonal_projection(-2.0, 2.0, -2.0, 2.0, 2.0, -2.0) # amplia a visao
 	print(f'Model:\n{model}\n')
 	print(f'View:\n{view}\n')
@@ -128,11 +131,11 @@ def display():
 	glBindVertexArray(vao)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo)
 	
-	lightPos = [1.0, 0.0, 0.0] # posicao da luz
+	lightPos = [2.0, 0.0, 0.0] # posicao da luz
 	glUniform3fv(idLightPos, 1,lightPos)
-	glUniform3fv(idColor,1,[0.0,1.0,0.0])
+	glUniform3fv(idColor,1,[1.0,0.0,0.0])
 	glUniform3fv(idLight,1,[1.0,1.0,1.0])
-	glUniform3fv(idViewPos,1,[0.0,0.0,0.0])
+	glUniform3fv(idViewPos,1,posCam)
 	
 	glUniformMatrix4fv(idMod, 1, GL_FALSE, model)
 	glUniformMatrix4fv(idView, 1, GL_FALSE, view)

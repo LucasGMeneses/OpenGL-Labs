@@ -1,15 +1,23 @@
 
 #include <GL/freeglut.h> 
 #include <stdio.h>
-
+#include <unistd.h>
 
 //retangulo                   //largura  altura
 void square(float x, float y, float w, float h){
+   printf("square\n");
    glBegin(GL_POLYGON);
       glVertex2f(x, y-h);
+      printf("%f, %f\n", x, y-h);
+      
       glVertex2f(x+w,y-h);
-      glVertex2f(x+w, y); 
+      printf("%f, %f\n", x+w, y-h);
+      
+      glVertex2f(x+w, y);
+      printf("%f, %f\n", x+w, y);
+
       glVertex2f(x, y); 
+      printf("%f, %f\n", x, y);
    glEnd();
 }
 //casa                   //largura  altura
@@ -19,8 +27,12 @@ void home(float x, float y, float w, float h){
    //telhado
    glBegin(GL_POLYGON);
       glVertex2f(x, hr);
+      printf("%f, %f\n", x, hr);
+
       glVertex2f(x+w,hr);
-      glVertex2f(x+(w/2), y); 
+      printf("%f, %f\n", x+w, hr);
+      glVertex2f(x+(w/2), y);
+      printf("%f, %f\n", x+(w/2), y);
    glEnd();
 
    //parede
@@ -29,12 +41,23 @@ void home(float x, float y, float w, float h){
 }
 //poligono                  //largura  altura
 void poly(float x, float y, float w, float h){
+   printf("Poly\n");
+
    glBegin(GL_POLYGON);
       glVertex2f(x+(w/2), y-h);
+      printf("%f, %f\n", x+(w/2), y-h);
+
       glVertex2f(x+w,y-h);
-      glVertex2f(x+w, y); 
+      printf("%f, %f\n", x+w, y-h);
+
+      glVertex2f(x+w, y);
+      printf("%f, %f\n", x+w, y);
+
       glVertex2f(x, y);
+      printf("%f, %f\n", x , y);
+
       glVertex2f(x, y-(h/2));
+      printf("%f, %f\n", x, y-(h/2));
    glEnd();
 }
 //ruas
@@ -81,11 +104,15 @@ void init() {
 
 void display() {
    glClear(GL_COLOR_BUFFER_BIT);        
-   
+   printf("streets\n");
    streets();
+   printf("blocks\n");
    blocks();
+   printf("home\n");
    home(0.65f,0.34f,0.1f,0.1f);
-   glFlush(); 
+   printf("FIMMMMM\n\n");
+   glFlush();
+   usleep(300000);
 }
 
 
