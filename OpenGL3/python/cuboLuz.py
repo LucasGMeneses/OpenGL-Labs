@@ -131,7 +131,7 @@ def display():
 	glBindVertexArray(vao)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo)
 	
-	lightPos = [0.0, 1.0, 0.0] # posicao da luz
+	lightPos = [0.0, 2.0, 0.0] # posicao da luz
 	glUniform3fv(idLightPos, 1,lightPos)
 	glUniform3fv(idColor,1,[1.0,0.0,0.0])
 	glUniform3fv(idLight,1,[1.0,1.0,1.0])
