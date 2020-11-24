@@ -96,8 +96,8 @@ def init():
 
 	model = matrix44.multiply(model,rotT) 
 
-	posCam = [0.0, 1.0, 0.0]
-	view = matrix44.create_identity()
+	posCam = [0.0, 0.0, 0.0]
+	view = matrix44.create_look_at(posCam, [0.0, 0.0,-0.1], [0.0, 1.0, 0.0])
 	projection = matrix44.create_orthogonal_projection(-2.0, 2.0, -2.0, 2.0, 2.0, -2.0) # amplia a visao
 	print(f'Model:\n{model}\n')
 	print(f'View:\n{view}\n')
@@ -131,7 +131,7 @@ def display():
 	glBindVertexArray(vao)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo)
 	
-	lightPos = [2.0, 0.0, 0.0] # posicao da luz
+	lightPos = [0.0, 1.0, 0.0] # posicao da luz
 	glUniform3fv(idLightPos, 1,lightPos)
 	glUniform3fv(idColor,1,[1.0,0.0,0.0])
 	glUniform3fv(idLight,1,[1.0,1.0,1.0])
