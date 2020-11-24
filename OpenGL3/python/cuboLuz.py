@@ -96,8 +96,8 @@ def init():
 
 	model = matrix44.multiply(model,rotT) 
 
-	posCam = [0.0, 0.0, 0.0]
-	view = matrix44.create_look_at(posCam, [0.0, 0.0,-0.1], [0.0, 1.0, 0.0])
+	posCam = [0.0, 1.0, 0.0]
+	view = matrix44.create_identity()
 	projection = matrix44.create_orthogonal_projection(-2.0, 2.0, -2.0, 2.0, 2.0, -2.0) # amplia a visao
 	print(f'Model:\n{model}\n')
 	print(f'View:\n{view}\n')
